@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+<h1 class="mt-4">Tus Tareas</h1>
+<a href="{{ url_for('main.new_task') }}" class="btn btn-success mb-3">Agregar Nueva Tarea</a>
+<div class="list-group">
+    {% for task in tasks %}
+    <a href="{{ url_for('main.task', task_id=task.id) }}" class="list-group-item list-group-item-action">
+        <h5 class="mb-1">{{ task.title }}</h5>
+        <p class="mb-1">{{ task.content }}</p>
+        <small>Creado por {{ task.author.username }} el {{ task.date_posted.strftime('%Y-%m-%d') }}</small>
+        <p class="text-muted">Fecha de Vencimiento: {{ task.due_date.strftime('%Y-%m-%d') if task.due_date else 'No especificada' }}</p>
+        <p class="text-muted">Prioridad: {{ task.priority }}</p>
+    </a>
+    {% endfor %}
+</div>
+<a href="{{ url_for('main.home') }}" class="btn btn-secondary mt-3">Regresar a Inicio</a>
+{% endblock %}

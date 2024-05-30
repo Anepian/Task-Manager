@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+<h1 class="mt-4">Todas las tareas</h1>
+<div class="list-group">
+    {% for task in tasks %}
+    <a href="{{ url_for('main.task', task_id=task.id) }}" class="list-group-item list-group-item-action">
+        <h5 class="mb-1">{{ task.title }}</h5>
+        <p class="mb-1">{{ task.content }}</p>
+        <small>Creado por {{ task.author.username }} el {{ task.date_posted.strftime('%Y-%m-%d') }}</small>
+    </a>
+    {% endfor %}
+</div>
+{% endblock %}

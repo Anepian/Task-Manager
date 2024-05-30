@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block content %}
+<h1 class="mt-4">{{ task.title }}</h1>
+<p>{{ task.content }}</p>
+<p class="text-muted">Creado por {{ task.author.username }} el {{ task.date_posted.strftime('%Y-%m-%d') }}</p>
+<p class="text-muted">Fecha de Vencimiento: {{ task.due_date.strftime('%Y-%m-%d') if task.due_date else 'No especificada' }}</p>
+<p class="text-muted">Prioridad: {{ task.priority }}</p>
+{% if task.author == current_user %}
+    <a href="{{ url_for('main.update_task', task_id=task.id) }}" class="btn btn-primary">Editar</a>
+    <form action="{{ url_for('main.delete_task', task_id=task.id) }}" method="POST" style="display:inline;">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button type="submit" class="btn btn-danger">Eliminar</button>
+    </form>
+{% endif %}
+<a href="{{ url_for('main.tasks') }}" class="btn btn-secondary mt-3">Regresar al Menú</a>
+
+<hr>
+
+<h2>Comentarios</h2>
+<form action="{{ url_for('main.task', task_id=task.id) }}" method="POST">
+    {{ form.hidden_tag() }}
+    <div class="form-group">
+        {{ form.content.label(class="form-control-label") }}
+        {{ form.content(class="form-control form-control-lg") }}
+    </div>
+    <div class="form-group">
+        {{ form.submit(class="btn btn-primary btn-lg btn-block") }}
+    </div>
+</form>
+
+<div class="comments mt-4">
+    {% for comment in task.comments %}
+        <div class="comment mb-2">
+            <p><strong>{{ comment.author.username }}</strong> comentó el {{ comment.date_posted.strftime('%Y-%m-%d %H:%M:%S') }}</p>
+            <p>{{ comment.content }}</p>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}
